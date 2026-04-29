@@ -33,7 +33,7 @@ import {
 const { Text } = Typography;
 const { TextArea } = Input;
 
-export default function Editor() {
+export default function BSEditor() {
   const [sessionId, setSessionId] = useState("");
   const [txHash, setTxHash] = useState("");
   const [templatesOptions, setTemplatesOptions] = useState([]);
@@ -43,8 +43,8 @@ export default function Editor() {
   const [witness, setWitness] = useState("");
 
   const [runMode, setRunMode] = useState(false);
+  const [transType, setTransType] = useState(0);
   const [pc, setPc] = useState(0);
-  const [isInner, setIsInner] = useState(false);
   const [isTerminated, setIsTerminated] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [instructions, setInstructions] = useState([]);
@@ -126,8 +126,8 @@ export default function Editor() {
       const data = await postStep(context);
 
       setRunMode(true);
+      setTransType(data.transType)
       setPc(data.pc);
-      setIsInner(data.isInner);
       setIsTerminated(data.isTerminated);
       setInstructions(data.instructions);
       setIsValid(data.isValid);
@@ -190,8 +190,8 @@ export default function Editor() {
     setWitness("");
 
     setRunMode(false);
+    setTransType(0);
     setPc(0);
-    setIsInner(false);
     setIsTerminated(false);
     setIsValid(false);
     setInstructions([]);
@@ -200,7 +200,7 @@ export default function Editor() {
 
   return (
     <Row gutter={16}>
-      <Col span={12}>
+      <Col span={10}>
         {contextHolder}
 
         <Space vertical style={{ width: "100%" }}>
@@ -222,11 +222,11 @@ export default function Editor() {
               </Space>
 
               <Text strong>ScriptSig</Text>
-              <TextArea rows={3} disabled={runMode} value={scriptSig} onChange={e => setScriptSig(e.target.value)} placeholder="<scriptSig>" />
+              <TextArea rows={6} disabled={runMode} value={scriptSig} onChange={e => setScriptSig(e.target.value)} />
               <Text strong>ScriptPubKey</Text>
-              <TextArea rows={5} disabled={runMode} value={scriptPubkey} onChange={e => setScriptPubkey(e.target.value)} placeholder="OP_DUP OP_HASH160..." />
+              <TextArea rows={8} disabled={runMode} value={scriptPubkey} onChange={e => setScriptPubkey(e.target.value)} />
               <Text strong>Witness Data</Text>
-              <TextArea rows={3} disabled={runMode} value={witness} onChange={e => setWitness(e.target.value)} />
+              <TextArea rows={4} disabled={runMode} value={witness} onChange={e => setWitness(e.target.value)} />
 
               <Space size='small' wrap>
                 <Button icon={<FastBackwardOutlined />} onClick={handleReset}>Reset</Button>
@@ -237,17 +237,23 @@ export default function Editor() {
               </Space>
             </Space>
           </Card>
-
-          <Tool txHash={txHash} />
         </Space>
       </Col>
 
-      <Col span={6}>
-        <Pipeline isInner={isInner} instructions={instructions} pc={pc} />
-      </Col>
+      <Col span={14}>
+        <Space vertical style={{ width: "100%" }}>
+          <Tool txHash={txHash} />
 
-      <Col span={6}>
-        <Stack stack={stack} />
+          <Row gutter={16}>
+            <Col span={13}>
+              <Pipeline transType={transType} pc={pc} instructions={instructions} />
+            </Col>
+
+            <Col span={11}>
+              <Stack stack={stack} />
+            </Col>
+          </Row>
+        </Space>
       </Col>
     </Row>
   );
