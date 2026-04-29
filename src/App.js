@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
+import { Layout, Typography } from 'antd';
 
-function App() {
+import Editor from './components/Editor';
+
+const { Header, Content } = Layout;
+const { Title } = Typography;
+
+export default function BitcoinIDE() {
+  // eslint-disable-next-line
+  useEffect(() => { document.title = "Bitcoin Script Interpreter"; }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout style={{ minHeight: '100vh', background: '#141414' }}>
+      <Header style={{ background: '#001529', display: 'flex', alignItems: 'center' }}>
+        <Title level={3} style={{ color: 'white', margin: 0 }}>Bitcoin Script Visual Interpreter</Title>
+      </Header>
+
+      <Content style={{ padding: '20px' }}>
+        <Editor />
+      </Content>
+    </Layout>
   );
 }
-
-export default App;
