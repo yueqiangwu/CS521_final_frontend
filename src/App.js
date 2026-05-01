@@ -4,7 +4,7 @@ import { Layout, Menu } from 'antd';
 import { CodeOutlined, SwapOutlined } from '@ant-design/icons';
 
 import BitcoinScriptEditor from './pages/BitcoinScriptEditor';
-import UTXOVisualizer from './pages/UTXOVisualizer';
+// import UTXOVisualizer from './pages/UTXOVisualizer';
 
 const { Header, Content } = Layout;
 
@@ -29,7 +29,7 @@ export default function App() {
         <Content style={{ padding: '24px' }}>
           <Routes>
             <Route path="/" element={<BitcoinScriptEditor />} />
-            <Route path="/visualizer" element={<UTXOVisualizer />} />
+            <Route path="/visualizer" element={<BitcoinScriptEditor />} />
           </Routes>
         </Content>
       </Layout>
