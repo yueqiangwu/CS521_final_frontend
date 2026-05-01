@@ -8,7 +8,7 @@ import {
 import {
   getUtilsString,
   getUtilsSig,
-} from '../apis/api';
+} from '../../apis/api';
 
 const { Text } = Typography;
 

@@ -28,12 +28,12 @@ import {
   getTemplates,
   postStep,
   postClear,
-} from '../apis/api';
+} from '../../apis/api';
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
-export default function BSEditor() {
+export default function BitcoinScriptEditor() {
   const [sessionId, setSessionId] = useState("");
   const [txHash, setTxHash] = useState("");
   const [templatesOptions, setTemplatesOptions] = useState([]);
