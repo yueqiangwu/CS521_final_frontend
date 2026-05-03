@@ -62,11 +62,13 @@ export default function Pipeline({ transType, pc, instructions }) {
                 break;
             }
 
+            const instrStr = instr || "00";
+
             return (
               <List.Item style={{ backgroundColor: bgColor, padding: '5px 10px' }}>
                 <Tag color={index === pc ? "gold" : "default"}>Instr {index} ({instrTypeName})</Tag>
-                <Tooltip color="#ffffff" title={<Text copyable>{instr}</Text>}>
-                  <Text strong={index === pc} ellipsis style={{ maxWidth: '300px' }}>{instr}</Text>
+                <Tooltip color="#ffffff" title={<Text copyable>{instrStr}</Text>}>
+                  <Text strong={index === pc} ellipsis style={{ maxWidth: '300px' }}>{instrStr}</Text>
                 </Tooltip>
               </List.Item>
             );

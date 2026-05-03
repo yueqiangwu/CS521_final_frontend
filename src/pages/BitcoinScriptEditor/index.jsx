@@ -21,6 +21,7 @@ import {
 import Pipeline from './Pipeline';
 import Stack from './Stack';
 import Tool from './Tool';
+import VfStack from './VfStack';
 
 import {
   postInit,
@@ -49,6 +50,8 @@ export default function BitcoinScriptEditor() {
   const [isValid, setIsValid] = useState(false);
   const [instructions, setInstructions] = useState([]);
   const [stack, setStack] = useState([]);
+  const [altStack, setAltStack] = useState([]);
+  const [vfStack, setVfStack] = useState([]);
 
   const [notificationApi, contextHolder] = notification.useNotification();
 
@@ -132,6 +135,8 @@ export default function BitcoinScriptEditor() {
       setInstructions(data.instructions);
       setIsValid(data.isValid);
       setStack(data.stack);
+      setAltStack(data.altStack);
+      setVfStack(data.vfStack);
 
       if (data.isTerminated) {
         openNotification(data.isValid);
@@ -196,6 +201,8 @@ export default function BitcoinScriptEditor() {
     setIsValid(false);
     setInstructions([]);
     setStack([]);
+    setAltStack([]);
+    setVfStack([]);
   };
 
   return (
@@ -250,7 +257,11 @@ export default function BitcoinScriptEditor() {
             </Col>
 
             <Col span={11}>
-              <Stack stack={stack} />
+              <Space vertical style={{ width: "100%" }}>
+                <Stack title="Stack" stack={stack} />
+                <Stack title="ALT Stack" stack={altStack} />
+                <VfStack title="VF Stack" stack={vfStack} />
+              </Space>
             </Col>
           </Row>
         </Space>
