@@ -8,14 +8,18 @@ export default function Stack({ title, stack }) {
     children: (
       <List
         dataSource={stack}
-        renderItem={(item, index) => (
-          <List.Item style={{ padding: '5px 10px' }}>
-            <Tag color="blue">Index {index}</Tag>
-            <Tooltip color="#ffffff" title={<Text copyable>{item}</Text>}>
-              <Text code ellipsis style={{ maxWidth: '270px' }}>{item}</Text>
-            </Tooltip>
-          </List.Item>
-        )}
+        renderItem={(item, index) => {
+          const itemStr = item || "00";
+
+          return (
+            <List.Item style={{ padding: '5px 10px' }}>
+              <Tag color="blue">Index {index}</Tag>
+              <Tooltip color="#ffffff" title={<Text copyable>{itemStr}</Text>}>
+                <Text code ellipsis style={{ maxWidth: '270px' }}>{itemStr}</Text>
+              </Tooltip>
+            </List.Item>
+          );
+        }}
       />
     ),
   }];

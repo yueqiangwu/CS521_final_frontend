@@ -220,7 +220,7 @@ export default function BitcoinScriptEditor() {
         {contextHolder}
 
         <Space vertical style={{ width: "100%" }}>
-          <Card title="Conext" size="small">
+          <Card title="Context" size="small">
             <Space wrap>
               <Text strong>Current TxHash:</Text>
               <Text code copyable>{txHash}</Text>
