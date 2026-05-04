@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import {
   Row,
   Col,
-  Input,
   Button,
   Card,
+  Form,
   Typography,
   Space,
   notification,
@@ -22,6 +22,7 @@ import Pipeline from './Pipeline';
 import Stack from './Stack';
 import Tool from './Tool';
 import VfStack from './VfStack';
+import CodeEditor from '../../components/CodeEditor';
 
 import {
   postInit,
@@ -32,16 +33,11 @@ import {
 } from '../../apis/api';
 
 const { Text } = Typography;
-const { TextArea } = Input;
 
 export default function BitcoinScriptEditor() {
   const [sessionId, setSessionId] = useState("");
   const [txHash, setTxHash] = useState("");
   const [templatesOptions, setTemplatesOptions] = useState([]);
-
-  const [scriptSig, setScriptSig] = useState("");
-  const [scriptPubkey, setScriptPubkey] = useState("");
-  const [witness, setWitness] = useState("");
 
   const [runMode, setRunMode] = useState(false);
   const [transType, setTransType] = useState(0);
@@ -52,6 +48,8 @@ export default function BitcoinScriptEditor() {
   const [stack, setStack] = useState([]);
   const [altStack, setAltStack] = useState([]);
   const [vfStack, setVfStack] = useState([]);
+
+  const [form] = Form.useForm();
 
   const [notificationApi, contextHolder] = notification.useNotification();
 
@@ -103,9 +101,11 @@ export default function BitcoinScriptEditor() {
   const fetchTemplates = async (transactionType) => {
     try {
       const data = await getTemplates(transactionType, txHash);
-      setScriptSig(data.scriptSig);
-      setScriptPubkey(data.scriptPubkey);
-      setWitness(data.witness);
+      form.setFieldsValue({
+        scriptSig: data.scriptSig,
+        scriptPubkey: data.scriptPubkey,
+        witness: data.witness,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -122,9 +122,7 @@ export default function BitcoinScriptEditor() {
         sessionId,
         mode,
         txHash,
-        scriptSig,
-        scriptPubkey,
-        witness,
+        ...form.getFieldValue(),
       };
       const data = await postStep(context);
 
@@ -187,13 +185,11 @@ export default function BitcoinScriptEditor() {
     await runStep(MODE.runAll);
   };
 
-  const handleClearAll = async () => {
-    await runClear();
+  const clearInput = () => {
+    form.resetFields();
+  };
 
-    setScriptSig("");
-    setScriptPubkey("");
-    setWitness("");
-
+  const clearOutput = () => {
     setRunMode(false);
     setTransType(0);
     setPc(0);
@@ -203,6 +199,19 @@ export default function BitcoinScriptEditor() {
     setStack([]);
     setAltStack([]);
     setVfStack([]);
+  };
+
+  const handleClearOutput = async () => {
+    await runClear();
+
+    clearOutput();
+  };
+
+  const handleClearAll = async () => {
+    await runClear();
+
+    clearInput();
+    clearOutput();
   };
 
   return (
@@ -228,18 +237,30 @@ export default function BitcoinScriptEditor() {
                 ))}
               </Space>
 
-              <Text strong>ScriptSig</Text>
-              <TextArea rows={6} disabled={runMode} value={scriptSig} onChange={e => setScriptSig(e.target.value)} />
-              <Text strong>ScriptPubKey</Text>
-              <TextArea rows={8} disabled={runMode} value={scriptPubkey} onChange={e => setScriptPubkey(e.target.value)} />
-              <Text strong>Witness Data</Text>
-              <TextArea rows={4} disabled={runMode} value={witness} onChange={e => setWitness(e.target.value)} />
+              <Form form={form} layout='vertical' initialValues={{
+                scriptSig: "",
+                scriptPubkey: "",
+                witness: "",
+              }}>
+                <Form.Item label={<Text strong>ScriptSig</Text>} name="scriptSig">
+                  <CodeEditor disabled={runMode} height='120px' />
+                </Form.Item>
+
+                <Form.Item label={<Text strong>ScriptPubKey</Text>} name="scriptPubkey">
+                  <CodeEditor disabled={runMode} height='180px' />
+                </Form.Item>
+
+                <Form.Item label={<Text strong>Witness Data</Text>} name="witness">
+                  <CodeEditor disabled={runMode} height='120px' />
+                </Form.Item>
+              </Form>
 
               <Space size='small' wrap>
                 <Button icon={<FastBackwardOutlined />} onClick={handleReset}>Reset</Button>
                 <Button color="primary" variant="dashed" icon={<StepBackwardOutlined />} onClick={handleStepBack}>Step Back</Button>
                 <Button type="primary" icon={<StepForwardOutlined />} onClick={handleStepOver}>Step Over</Button>
                 <Button color="primary" variant="outlined" icon={<FastForwardOutlined />} onClick={handleRunAll}>Run All</Button>
+                <Button color="danger" variant="dashed" icon={<ClearOutlined />} onClick={handleClearOutput}>Clear</Button>
                 <Button icon={<ClearOutlined />} danger onClick={handleClearAll}>Clear All</Button>
               </Space>
             </Space>

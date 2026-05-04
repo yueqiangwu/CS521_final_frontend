@@ -79,7 +79,7 @@ export default function Tool({ txHash }) {
   return (
     <Card title="Helper Tools" size="small">
       <Space vertical style={{ width: "100%" }}>
-        <Input value={inputText} onChange={e => setInputText(e.target.value)} placeholder="Input text..." style={{ width: "100%" }} />
+        <Input value={inputText} onChange={e => setInputText(e.target.value)} style={{ width: "100%" }} />
         <Space size='small' wrap>
           <Button size="small" onClick={handleSha256}>SHA256</Button>
           <Button size="small" onClick={handleHash160}>Hash160</Button>
